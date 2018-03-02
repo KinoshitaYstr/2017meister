@@ -63,6 +63,7 @@ void loop() {
         if(currentLine.endsWith("GET /note/val")) {
           client.println(note1);
         }
+        
       }
     }
     client.stop();

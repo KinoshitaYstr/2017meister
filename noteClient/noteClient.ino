@@ -3,7 +3,7 @@
 
 const char SSID[] = "POPN'STAR MASTER AP";
 const char PASSWORD[] = "1234567890";
-const char URL[] = "http://192.168.20.2/note/val";
+const char URL[] = "http://192.168.20.2:80/note/val";
 
 WiFiServer server(80);
 
@@ -35,6 +35,7 @@ void loop() {
   int httpCode = http.GET();
   Serial.printf("Response: %d", httpCode);
   Serial.println();
+  Serial.println(http.getString());
   if (httpCode == HTTP_CODE_OK) {
     String body = http.getString();
     Serial.print("Response Body: ");
