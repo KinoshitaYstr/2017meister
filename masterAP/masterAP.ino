@@ -61,6 +61,8 @@ void loop() {
           note1 = false;
         }
         if(currentLine.endsWith("GET /note/val")) {
+          client.print("HTTP/1.1 200 OK");
+          client.print("Content-type:text/html");
           client.println(note1);
         }
         
