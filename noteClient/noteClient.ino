@@ -3,8 +3,7 @@
 
 const char SSID[] = "POP'N STAR MASTER AP";
 const char PASSWORD[] = "1234567890";
-//const char URL[] = "http://192.168.20.2/val";
-const char URL[] = "http://192.168.20.2/H";
+const char URL[] = "http://192.168.20.2/note/val";
 
 WiFiServer server(80);
 
