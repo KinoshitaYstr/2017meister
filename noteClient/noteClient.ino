@@ -3,7 +3,7 @@
 
 const char SSID[] = "POPN'STAR MASTER AP";
 const char PASSWORD[] = "1234567890";
-const char URL[] = "http://192.168.20.2:80/note/val";
+const char URL[] = "http://192.168.20.2/note/val";
 
 WiFiServer server(80);
 
@@ -30,6 +30,7 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("---------------------------------");
   HTTPClient http;
   http.begin(URL);
   int httpCode = http.GET();
@@ -41,6 +42,7 @@ void loop() {
     Serial.print("Response Body: ");
     Serial.println(body);
     char val = body[0];
+    Serial.println(val);
     if(val == '0') {
       digitalWrite(4,LOW);
       Serial.println("stop");
@@ -48,6 +50,7 @@ void loop() {
       digitalWrite(4,HIGH);
       Serial.println("start");
     }
+    Serial.println("---------------------------------");
   }
   http.end();
   delay(1000);
