@@ -3,8 +3,7 @@
 
 const char SSID[] = "POP'N STAR MASTER AP";
 const char PASSWORD[] = "1234567890";
-const char URL_PWM[] = "http://192.168.20.2/fly/pwm/val";
-const char URL_GO[] = "http://192.168.20.2/fly/go/val";
+const char URL[] = "http://192.168.20.2/pwm/val";
 
 WiFiServer server(80);
 
@@ -36,7 +35,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   HTTPClient http;
-  http.begin(URL_GO);
+  http.begin(URL);
   int httpCode = http.GET();
   Serial.printf("Response: %d", httpCode);
   Serial.println();
@@ -44,25 +43,13 @@ void loop() {
     String body = http.getString();
     Serial.print("Response Body: ");
     Serial.println(body);
-    char val = body[0];
-    Serial.println(val);
-    if(val == '0') {
-      digitalWrite(4,HIGH);
-      digitalWrite(5,HIGH);
-      Serial.println("stop");
-    }else if(val == '1') {
-      http.begin(URL_PWM);
-      httpCode = http.GET();
-      Serial.printf("Response: %d", httpCode);
-      Serial.println();
-      if(httpCode == HTTP_CODE_OK) {
-        body = http.getString();
-        int pwmVal = 10*body.toInt();
-        Serial.printf("pwm : %d",pwmVal);
-        Serial.println();
-        pwmGo(pwmVal);
-      }
-    }
+
+    body = http.getString();
+    int pwmVal = 10*body.toInt();
+    Serial.printf("pwm : %d",pwmVal);
+    Serial.println();
+    pwmGo(pwmVal);
+   
   }
 }
 

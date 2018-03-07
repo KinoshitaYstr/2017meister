@@ -11,6 +11,9 @@ const IPAddress subnet(255, 255, 255, 0); // サブネットマスク
 boolean noteFlag = false;
 boolean dollFlag = false;
 
+boolean flyFlag = false;
+int PWM = 0;
+
 void setup() {
   Serial.begin(115200);
 
@@ -96,7 +99,54 @@ void loop() {
               client.println("Content-type:text/html");
               client.println();
               client.println("reset doll");
+            }else if(currentLine.startsWith("GET /fly/go/L")) {
+              flyFlag = false;
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println("reset fly");
+            }else if(currentLine.startsWith("GET /fly/go/H")) {
+              flyFlag = true;
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println("set fly");
+            }else if(currentLine.startsWith("GET /fly/go/val")) {
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println(flyFlag);
+            }else if(currentLine.startsWith("GET /pwm/val")) {
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println(PWM);
+            }else if(currentLine.indexOf("/pwm/set/") > -1) {
+              char data = currentLine[17];
+              Serial.println();
+              Serial.println(currentLine);
+              Serial.println(currentLine[17]);
+              PWM = data-'0';
+              Serial.print("pwm set : ");
+              Serial.println(data);
+              Serial.println(PWM);
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println("set pwm");
+              client.println(PWM);
+              client.println("<br>");
+              client.println(currentLine.length());
+              client.println("<br>");
+              for(int i = 0;i < currentLine.length();i++)
+              {
+                client.printf("%d : ",i);
+                client.println(currentLine[i]);
+                client.println("<br>");
+              }
+              client.println(data);
             }
+            
             Serial.println("-------------------------------");
             currentLine = "";
           }
