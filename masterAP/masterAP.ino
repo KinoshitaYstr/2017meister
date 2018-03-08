@@ -9,10 +9,10 @@ const IPAddress ip(192, 168, 20, 2);      // IPアドレス
 const IPAddress subnet(255, 255, 255, 0); // サブネットマスク
 
 boolean noteFlag = false;
-boolean dollFlag = false;
+boolean dollFlagR = false;
+boolean dollFlagL = false;
 
 boolean flyFlag = false;
-int PWM = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -52,15 +52,17 @@ void loop() {
             Serial.println("-------------------------------");
             Serial.println(currentLine);
             if(currentLine.startsWith("GET /all/H")) {
-              dollFlag = true;
               noteFlag = true;
+              dollFlagR = true;
+              dollFlagL = true;
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
               client.println("set all");
             }else if(currentLine.startsWith("GET /all/L")) {
-              dollFlag = false;
               noteFlag = false;
+              dollFlagR = false;
+              dollFlagL = false;
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
@@ -70,6 +72,11 @@ void loop() {
               client.println("Content-type:text/html");
               client.println();
               client.println(noteFlag);
+            }else if(currentLine.startsWith("GET /fly/val")) {
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println(flyFlag);
             }else if(currentLine.startsWith("GET /note/H")) {
               noteFlag = true;
               client.println("HTTP/1.1 200 OK");
@@ -82,69 +89,52 @@ void loop() {
               client.println("Content-type:text/html");
               client.println();
               client.println("reset note");
-            }else if(currentLine.startsWith("GET /doll/val")) {
+            }else if(currentLine.startsWith("GET /doll/R/val")) {
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
-              client.println(dollFlag);
-            }else if(currentLine.startsWith("GET /doll/H")) {
-              dollFlag = true;
+              client.println(dollFlagR);
+            }else if(currentLine.startsWith("GET /doll/R/H")) {
+              dollFlagR = true;
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
               client.println("set doll");
-            }else if(currentLine.startsWith("GET /doll/L")) {
-              dollFlag = false;
+            }else if(currentLine.startsWith("GET /doll/R/L")) {
+              dollFlagR = false;
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
               client.println("reset doll");
-            }else if(currentLine.startsWith("GET /fly/go/L")) {
+            }else if(currentLine.startsWith("GET /doll/L/val")) {
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println(dollFlagL);
+            }else if(currentLine.startsWith("GET /doll/L/H")) {
+              dollFlagL = true;
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println("set doll");
+            }else if(currentLine.startsWith("GET /doll/L/L")) {
+              dollFlagL = false;
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.println("reset doll");
+            }else if(currentLine.startsWith("GET /fly/L")) {
               flyFlag = false;
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
               client.println("reset fly");
-            }else if(currentLine.startsWith("GET /fly/go/H")) {
+            }else if(currentLine.startsWith("GET /fly/H")) {
               flyFlag = true;
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
               client.println("set fly");
-            }else if(currentLine.startsWith("GET /fly/go/val")) {
-              client.println("HTTP/1.1 200 OK");
-              client.println("Content-type:text/html");
-              client.println();
-              client.println(flyFlag);
-            }else if(currentLine.startsWith("GET /pwm/val")) {
-              client.println("HTTP/1.1 200 OK");
-              client.println("Content-type:text/html");
-              client.println();
-              client.println(PWM);
-            }else if(currentLine.indexOf("/pwm/set/") > -1) {
-              char data = currentLine[17];
-              Serial.println();
-              Serial.println(currentLine);
-              Serial.println(currentLine[17]);
-              PWM = data-'0';
-              Serial.print("pwm set : ");
-              Serial.println(data);
-              Serial.println(PWM);
-              client.println("HTTP/1.1 200 OK");
-              client.println("Content-type:text/html");
-              client.println();
-              client.println("set pwm");
-              client.println(PWM);
-              client.println("<br>");
-              client.println(currentLine.length());
-              client.println("<br>");
-              for(int i = 0;i < currentLine.length();i++)
-              {
-                client.printf("%d : ",i);
-                client.println(currentLine[i]);
-                client.println("<br>");
-              }
-              client.println(data);
             }
             
             Serial.println("-------------------------------");
